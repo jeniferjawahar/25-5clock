@@ -1,0 +1,31 @@
+name: Deploy React App to S3
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install project dependencies
+        run: npm install
+      - name: Build the React application
+        run: PUBLIC_URL=https://jenifer.s3.ap-south-1.amazonaws.com/25_5_clock npm run build
+      - uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --acl public-read --follow-symlinks --delete
+        env:
+          AWS_S3_BUCKET: "jenifer"
+          AWS_ACCESS_KEY_ID: ${{ AKIA276BQM4WD335BTKZ }}
+          AWS_SECRET_ACCESS_KEY: ${{ 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 }}
+          AWS_REGION: "ap-south-1"
+          SOURCE_DIR: "build"
+          DEST_DIR: "25_5_clock"
