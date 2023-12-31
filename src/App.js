@@ -48,7 +48,8 @@ function App() {
         setTimeout(handleClick, 1000);
       }
     }
-  }, [time, breakLength, sessionLength]);
+    //eslint-disable-next-line
+  }, [time]);
 
   function formatTimer(tim) {
     if (tim.toString().length === 1) {
@@ -63,7 +64,7 @@ function App() {
     seconds = seconds - 1;
     if (seconds < 0) {
       minutes = minutes - 1;
-      seconds = 59;
+      seconds = defaultResetSeconds;
     }
     timer = `${formatTimer(minutes)}:${formatTimer(seconds)}`;
     setTime((t) => timer);
@@ -107,8 +108,8 @@ function App() {
     if (!running) {
       setSessionLength((s) => {
         let newSessionLength = s + 1;
-        if (newSessionLength > 60) {
-          newSessionLength = 60;
+        if (newSessionLength > maxSessionLength) {
+          newSessionLength = maxSessionLength;
         }
 
         return newSessionLength;
@@ -120,8 +121,8 @@ function App() {
     if (!running) {
       setSessionLength((s) => {
         let newSessionLength = s - 1;
-        if (newSessionLength <= 1) {
-          newSessionLength = 1;
+        if (newSessionLength <= minSessionLength) {
+          newSessionLength = minSessionLength;
         }
 
         return newSessionLength;
@@ -133,8 +134,8 @@ function App() {
     if (!running) {
       setBreakLength((s) => {
         let newBreakLength = s + 1;
-        if (newBreakLength >= 60) {
-          newBreakLength = 60;
+        if (newBreakLength > maxBreakLength) {
+          newBreakLength = maxBreakLength;
         }
         return newBreakLength;
       });
@@ -144,8 +145,8 @@ function App() {
     if (!running) {
       setBreakLength((s) => {
         let newBreakLength = s - 1;
-        if (newBreakLength <= 1) {
-          newBreakLength = 1;
+        if (newBreakLength <= minBreakLength) {
+          newBreakLength = minBreakLength;
         }
         return newBreakLength;
       });
